@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zobi 拆解 & 我们的差距分析（中文版）</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#16181d; --muted:#5b6472;
+    --accent:#2f6df0; --accent2:#0f9d76; --warn:#e0533d; --line:#e3e7ee;
+    --chip:#eef3ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);overflow:hidden}
+  .deck{height:100vh;display:flex;flex-direction:column}
+  .stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:32px}
+  .slide{display:none;width:min(1040px,94vw);max-height:84vh;overflow:auto;background:var(--card);
+    border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 40px rgba(20,30,60,.08);
+    padding:46px 54px;animation:fade .35s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h1{font-size:34px;line-height:1.18;letter-spacing:-.5px}
+  h2{font-size:25px;margin-bottom:18px;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+  h2 .n{font-size:13px;color:#fff;background:var(--accent);border-radius:8px;padding:3px 9px;font-weight:700}
+  p{font-size:16.5px;line-height:1.7;color:var(--muted);margin:10px 0}
+  .lead{font-size:18px;color:var(--ink)}
+  ul{margin:12px 0 12px 4px;list-style:none}
+  li{font-size:16.5px;line-height:1.65;padding:8px 0 8px 26px;position:relative;color:var(--ink)}
+  li:before{content:"";position:absolute;left:4px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  li b{color:var(--ink)}
+  .grid{display:grid;gap:16px;margin-top:18px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .box{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:#fcfdff}
+  .box h3{font-size:15px;margin-bottom:8px;color:var(--accent)}
+  .box p{font-size:14.5px;margin:4px 0;color:var(--muted)}
+  .stat{text-align:center;padding:20px 12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fbfdff,#f4f8ff)}
+  .stat .big{font-size:30px;font-weight:800;color:var(--accent);letter-spacing:-.5px}
+  .stat .lbl{font-size:13px;color:var(--muted);margin-top:6px}
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin:18px 0}
+  .node{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff;min-width:150px;flex:1}
+  .node .t{font-size:13px;font-weight:700;color:var(--accent)}
+  .node .d{font-size:13px;color:var(--muted);margin-top:6px}
+  .arrow{display:flex;align-items:center;color:var(--muted);font-size:22px;font-weight:700}
+  .tag{display:inline-block;font-size:12.5px;background:var(--chip);color:var(--accent);border-radius:7px;padding:4px 10px;margin:3px 4px 3px 0;font-weight:600}
+  .quote{border-left:4px solid var(--accent2);padding:10px 16px;color:var(--ink);font-style:italic;background:#f3fbf7;border-radius:0 10px 10px 0;font-size:15.5px}
+  .warn{color:var(--warn)}
+  .foot{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;
+    padding:12px 26px;background:rgba(247,248,250,.92);border-top:1px solid var(--line);backdrop-filter:blur(6px)}
+  .foot .ctr{font-size:13px;color:var(--muted)}
+  .nav{display:flex;gap:8px}
+  .nav button{font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--line);
+    border-radius:9px;padding:8px 16px;cursor:pointer}
+  .nav button:hover{border-color:var(--accent);color:var(--accent)}
+  .nav button:disabled{opacity:.4;cursor:not-allowed}
+  code{background:#eef1f6;padding:2px 7px;border-radius:6px;font-size:13.5px;color:#222}
+  .pill{font-size:12px;color:#fff;background:var(--accent2);border-radius:20px;padding:3px 12px;font-weight:700}
+  .gap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .gap .col{border-radius:14px;padding:18px 20px}
+  .gap .zobi{background:#f3fbf7;border:1px solid #cfeede}
+  .gap .us{background:#fff5f3;border:1px solid #f3d6cf}
+  .gap h3{font-size:15px;margin-bottom:10px}
+  .gap .zobi h3{color:var(--accent2)} .gap .us h3{color:var(--warn)}
+  .gap li:before{background:transparent;border:1.5px solid currentColor}
+  .gap .zobi li:before{color:var(--accent2)} .gap .us li:before{color:var(--warn)}
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage">
+
+    <!-- 1 封面 -->
+    <section class="slide active">
+      <h1>Zobi 拆解<br>以及我们如何补齐差距</h1>
+      <p class="lead" style="margin-top:18px">一家应用型 AI 实验室如何训练出"从结果中学习"的销售 agent——<br>以及这对我们的技术栈意味着什么（Hermes + DeepSeek / Kimi / 混元）。</p>
+      <div style="margin-top:26px">
+        <span class="tag">应用型 AI 实验室</span>
+        <span class="tag">销售 agent</span>
+        <span class="tag">带结果标签的训练</span>
+        <span class="tag">差距分析</span>
+      </div>
+      <p style="margin-top:30px;font-size:14px">参考来源：zobi.com · blog.zobi.com &nbsp;|&nbsp; 数据：Zobi 官方公开数字</p>
+    </section>
+
+    <!-- 2 什么是 Zobi -->
+    <section class="slide">
+      <h2><span class="n">01</span> Zobi 是什么</h2>
+      <p class="lead">一家<b>应用型 AI 实验室</b>，在做"有情商（EQ）的模型"——训练模型去<b>理解并影响人</b>。</p>
+      <div class="grid g3">
+        <div class="box"><h3>基地</h3><p>爱沙尼亚塔林。小而扁平的团队——8 个岗位空缺，<b>没有管理层级</b>，所有人直接向创始人汇报。</p></div>
+        <div class="box"><h3>不是 SaaS 厂商</h3><p>他们<b>自己训练模型</b>，并<b>为电商品牌端到端跑销售对话</b>。产品就是模型 + 那个闭环。</p></div>
+        <div class="box"><h3>核心押注</h3><p>"语言模型靠阅读学会了写作。下一个能力是靠<b>试错和后果</b>学会的——从结果里学，不是从指令里学。"</p></div>
+      </div>
+      <div class="quote" style="margin-top:20px">"没有任何模型学会过销售。前沿模型能把产品描述得完美，但它们从没和一万个别犹豫的买家坐在一起过。"</div>
+    </section>
+
+    <!-- 3 真实数据 -->
+    <section class="slide">
+      <h2><span class="n">02</span> 真实使用数据（已公开）</h2>
+      <p>以下数字全部是 Zobi 自己公布的，不是估算。</p>
+      <div class="grid g4">
+        <div class="stat"><div class="big">$16M</div><div class="lbl">ARR，上线<br>3 个月后</div></div>
+        <div class="stat"><div class="big">50k+</div><div class="lbl">每天实时<br>对话量</div></div>
+        <div class="stat"><div class="big">1M+</div><div class="lbl">带结果标签的<br>对话</div></div>
+        <div class="stat"><div class="big">80+</div><div class="lbl">生产环境里的<br>品牌数</div></div>
+      </div>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="box"><h3>回复率</h3><p>生产环境<b>45%</b> 回复率——客户真正回话的对话占比。</p></div>
+        <div class="box"><h3>训练语料</h3><p>那 100 万+ 条对话里每条都带<b>客户下一步做了什么</b>——公开互联网上没有这个信号。</p></div>
+      </div>
+      <p style="margin-top:16px;font-size:14px" class="muted">重点：他们用极小的团队做到 $16M ARR，靠的是<b>数据飞轮</b>，不是人头。</p>
+    </section>
+
+    <!-- 4 AI 实验室闭环 -->
+    <section class="slide">
+      <h2><span class="n">03</span> AI 实验室怎么训练模型</h2>
+      <p class="lead">实验室的核心引擎：把每一场真实对话变成训练信号。</p>
+      <div class="flow">
+        <div class="node"><div class="t">1 · 跑</div><div class="d">agent 为品牌端到端跑真实销售对话</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">2 · 打标签</div><div class="d">每条对话贴上结果标签（客户做了什么）</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">3 · 训练</div><div class="d">按结果训练，不是按文字。预测每条回复的转化</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">4 · 打分</div><div class="d">按"每条对话的收入"评估</div></div>
+        <div class="arrow">↺</div>
+        <div class="node"><div class="t">5 · 验证</div><div class="d">实时留出组 A/B → 部署更好的策略 → 重复</div></div>
+      </div>
+      <div class="quote">"在结果上训练，在收入上评估。"——模型学的那个信号公开互联网没有：真实买家下一步做了什么。</div>
+      <p style="margin-top:14px">打分细节：每条草稿回复都会拿到一个<b>转化概率预测</b>；预测和现实的差距回流进训练。读起来最好的回复往往<b>不是</b>卖出去的那条——所以他们从不按"看着好"打分。</p>
+    </section>
+
+    <!-- 5 结果标签 -->
+    <section class="slide">
+      <h2><span class="n">04</span> 结果标签（无需人工标注）</h2>
+      <p>没人给回复打分。标签就是<b>客户做了什么</b>——这很难造假。</p>
+      <div class="grid g2">
+        <div class="box"><h3>每条对话记录</h3>
+          <ul>
+            <li>回复了——多快回复的</li>
+            <li>点了链接</li>
+            <li>买了——多少钱、用没用折扣</li>
+            <li>之后复购了没有</li>
+            <li>退款了没有</li>
+          </ul>
+        </div>
+        <div class="box"><h3>真实例子（已公开）</h3>
+          <p style="font-family:ui-monospace,Menlo,monospace;font-size:13.5px;color:var(--ink);background:#f4f6fb;padding:12px;border-radius:10px">
+            "比便宜那款值得吗？"<br>
+            "说实话，日常用的话值得。这款是大家会复购的。要我帮你留一件吗？"<br><br>
+            <b>已回复 · 4 分钟</b><br>
+            <b>已购买 · $86</b><br>
+            <b>未用折扣</b><br>
+            <b>第 52 天复购</b>
+          </p>
+        </div>
+      </div>
+      <p style="margin-top:12px">这就是公开网络造不出来的数据集：100 万条销售对话，<b>每条都带着结果</b>。</p>
+    </section>
+
+    <!-- 6 销售 agent 工作流 -->
+    <section class="slide">
+      <h2><span class="n">05</span> Zobi 销售 agent — 功能逻辑</h2>
+      <p class="lead">agent 处理四类电商场景，然后对每个场景跑同一套循环：</p>
+      <div style="margin:6px 0 16px">
+        <span class="tag">弃单挽回</span>
+        <span class="tag">物流问题</span>
+        <span class="tag">复购提醒</span>
+        <span class="tag">追加销售</span>
+      </div>
+      <div class="flow" style="flex-direction:column;gap:8px">
+        <div class="node"><div class="t">触发</div><div class="d">真实事件拉起 agent——弃单、物流疑问、该复购了、追加销售窗口</div></div>
+        <div class="node"><div class="t">读上下文</div><div class="d">首单还是复购 · 是否价格敏感 · 上次购买 · 偏好渠道 · 时段</div></div>
+        <div class="node"><div class="t">生成 + 预测</div><div class="d">写回复，同时预测它的转化概率</div></div>
+        <div class="node"><div class="t">渠道发送</div><div class="d">WhatsApp / Email / Web——客户在哪回就在哪发</div></div>
+        <div class="node"><div class="t">捕捉结果 → 标签</div><div class="d">客户做了什么，变成训练信号</div></div>
+        <div class="node"><div class="t">对比 + 验证</div><div class="d">预测 vs 实际 → 训练；实时留出组确认真实提升</div></div>
+      </div>
+    </section>
+
+    <!-- 7 agent 学到什么 -->
+    <section class="slide">
+      <h2><span class="n">06</span> agent 真正学到了什么</h2>
+      <div class="quote" style="margin-bottom:16px">"销售多半不在话里。"——从薄弱信号读懂人，把时机找对，知道什么时候该闭嘴。</div>
+      <div class="grid g2">
+        <div class="box"><h3>薄弱信号</h3>
+          <ul>
+            <li><b>"你最好了 🙏"</b> → 对话是热的</li>
+            <li><b>"ok"</b> → 对话在降温</li>
+            <li>什么时候提价格</li>
+            <li>什么时候跟进</li>
+            <li>什么时候该安静</li>
+          </ul>
+        </div>
+        <div class="box"><h3>上下文改变回复</h3>
+          <ul>
+            <li>老客户 + 折扣 = <b>白白让利</b></li>
+            <li>犹豫的首单，周日晚上 + 折扣 = <b>有时能成单</b></li>
+            <li>折扣能赢单<b>也能</b>拉低品牌</li>
+            <li>模型是靠大量见过才学会的——不是靠规则</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:14px">伦理内建：同意、语气、诚实是被<b>测量</b>的，不只是护栏——"丢了这个客户的单，不叫赢。"</p>
+    </section>
+
+    <!-- 8 差距 -->
+    <section class="slide">
+      <h2><span class="n">07</span> 差距：他们的模型 vs 我们的 API</h2>
+      <div class="gap">
+        <div class="col zobi">
+          <h3>Zobi — 模型自己拥有</h3>
+          <ul>
+            <li>在 <b>100 万+ 带结果标签</b>的销售对话上训练</li>
+            <li>学的是<b>后果</b>，不只是文字</li>
+            <li>每条回复预测转化</li>
+            <li>每场实时对话都在变强</li>
+            <li>护城河 = 数据飞轮 + 自有权重</li>
+          </ul>
+        </div>
+        <div class="col us">
+          <h3>我们 — DeepSeek / Kimi / 混元 API</h3>
+          <ul>
+            <li>在<b>公开互联网</b>上训练，从没见过销售结果</li>
+            <li>能写流利的销售文案，但<b>不知道有没有用</b></li>
+            <li>没有转化预测，没有结果学习</li>
+            <li>两次调用之间是一成不变的</li>
+            <li>护城河只能来自<b>我们的闭环</b>，不是权重</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:16px" class="warn"><b>核心差距：</b>API 模型缺了"结果反馈闭环"。我们没法重训它——但我们<b>可以在它外面把闭环建起来</b>。注意：混元（Hunyuan）是腾讯自研模型，但作为 API 调用时，和 DeepSeek / Kimi 一样没有 outcome 数据，差距同样存在。</p>
+    </section>
+
+    <!-- 9 怎么补差距 -->
+    <section class="slide">
+      <h2><span class="n">08</span> 我们怎么补差距</h2>
+      <p class="lead">模型 = 写手。我们的闭环 = 老师。六个具体机制：</p>
+      <div class="grid g2">
+        <div class="box"><h3>1 · 结果标签</h3><p>用 <b>Pipedrive 的阶段推进</b> 当标签。闭环是我们的，不是模型的。</p></div>
+        <div class="box"><h3>2 · 每条对话的收入</h3><p>北极星指标 = 阶段推进了没 / 赚到了没。不是"听着像不像人"。</p></div>
+        <div class="box"><h3>3 · 上下文靠记忆</h3><p>Hermes 持久记忆存首单/复购、价格敏感、渠道、时段。</p></div>
+        <div class="box"><h3>4 · 实时留出组 A/B</h3><p>n8n / 工作流：只让 20% 流量试新回复，其余做对比。</p></div>
+        <div class="box"><h3>5 · 话术本 / skills</h3><p>赢单回复 → 可复用 skill（GEPA 式）。靠积累，不靠重训。</p></div>
+        <div class="box"><h3>6 · 我们自己的语料</h3><p>从第一天就收集带标签对话 → 等量大了再考虑微调</p></div>
+      </div>
+    </section>
+
+    <!-- 10 我们的架构 -->
+    <section class="slide">
+      <h2><span class="n">09</span> 我们的参考架构</h2>
+      <div class="flow" style="flex-direction:column;gap:7px">
+        <div class="node"><div class="t">AI 模型</div><div class="d">DeepSeek / Kimi / 混元 &nbsp;<span class="pill">待确认：哪个？</span></div></div>
+        <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent（循环、工具、skill、记忆、cron、MCP、子 agent）</div></div>
+        <div class="node"><div class="t">VPS / 云</div><div class="d">Hetzner，德国 &nbsp;|&nbsp; Docker / SSH / 运行时 / DB / 日志</div></div>
+        <div class="node"><div class="t">工具 · 记忆 · 工作流</div><div class="d">REST/MCP · Webhooks · API · 浏览器 · 终端 &nbsp;|&nbsp; 记忆文件 · 会话 &nbsp;|&nbsp; n8n · cron · 调度</div></div>
+        <div class="node"><div class="t">Energy / Solar Agents</div><div class="d">Marketing（Meta, SEO）· SEO · CRM（Pipedrive）· Energy Platform · Execution · Finance · Analytics</div></div>
+        <div class="node"><div class="t">Sales Agent</div><div class="d">参考：zobi.com — 带结果标签的对话 · 转化预测 · 上下文感知 · 按收入评估 · 实时留出组 · 多渠道跟进</div></div>
+        <div class="node"><div class="t">业务状态 → 事件循环</div><div class="d">写回 CRM → 数据回流给 agent（飞轮）</div></div>
+      </div>
+    </section>
+
+    <!-- 11 结论 -->
+    <section class="slide">
+      <h2><span class="n">10</span> 结论 & 下一步</h2>
+      <ul>
+        <li>Zobi 的护城河是<b>数据飞轮</b>（跑 → 标签 → 训练 → 更强），不是提示词。</li>
+        <li>我们第一天没法训模型——但能用<b>同样的闭环</b>（结果标签 + 话术本）跑起来。</li>
+        <li>用 <b>Hermes + DeepSeek / Kimi / 混元</b> 先上 MVP；从第一场对话就埋好结果采集。</li>
+        <li>差距是真的，但<b>补得上</b>：模型负责写，我们的闭环负责教。</li>
+      </ul>
+      <div class="box" style="margin-top:18px"><h3>我们的技术栈</h3>
+        <ul>
+          <li>CRM：<b>Pipedrive</b> — 阶段推进 = 结果标签</li>
+          <li>Agent harness：<b>Hermes Agent</b>（循环、工具、skill、记忆、cron、MCP、子 agent）</li>
+          <li>渠道：<b>WhatsApp Business API · Calendly · Email</b></li>
+          <li>VPS：<b>Hetzner</b>（德国）走 SSH</li>
+          <li>主力 LLM：<b>DeepSeek V3</b> 或 <b>Kimi K3</b> 或 <b>混元</b> <span class="pill" style="background:var(--chip);color:var(--accent)">待确认</span></li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <div class="ctr" id="ctr">1 / 11</div>
+    <div class="nav">
+      <button id="prev" onclick="go(-1)">← 上一页</button>
+      <button id="next" onclick="go(1)">下一页 →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var s=document.querySelectorAll('.slide'),i=0;
+  function show(){s.forEach(function(x){x.classList.remove('active')});s[i].classList.add('active');
+    document.getElementById('ctr').textContent=(i+1)+' / '+s.length;
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===s.length-1;}
+  function go(d){i=Math.max(0,Math.min(s.length-1,i+d));show();}
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);});
+  show();
+</script>
+</body>
+</html>
