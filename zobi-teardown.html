@@ -237,7 +237,7 @@
 
     <!-- 9 BRIDGE THE GAP -->
     <section class="slide">
-      <h2><span class="n">08</span> How We Bridge the Gap</h2>
+      <h2><span class="n">09</span> How We Bridge the Gap</h2>
       <p class="lead">Model = the writer. Our loop = the teacher. Six concrete mechanisms:</p>
       <div class="grid g2">
         <div class="box"><h3>1 · Outcome labeling</h3><p>Use <b>Pipedrive stage progression</b> as the label. We own the loop, not the model.</p></div>
@@ -249,9 +249,42 @@
       </div>
     </section>
 
+    <!-- 08b REFERENCE SCOPE -->
+    <section class="slide">
+      <h2><span class="n">08</span> Reference Scope: Mechanism, Not Industry</h2>
+      <p class="lead">Zobi is an <b>e-commerce</b> agent. Our business is consultative, high-consideration online selling — not e-commerce. Is it still a valid reference? <b>Yes.</b></p>
+      <div class="flow" style="margin:16px 0">
+        <div class="node"><div class="t">Sales Agent (category)</div><div class="d">One family of systems</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">E-commerce subclass</div><div class="d">Zobi sits here: standard goods, fast close, fully automated</div></div>
+        <div class="arrow">+</div>
+        <div class="node"><div class="t">Consultative subclass</div><div class="d">We sit here: high ticket, long cycle, human handoff (Dachplaner / site visit)</div></div>
+      </div>
+      <div class="gap">
+        <div class="col zobi">
+          <h3>Borrow — vertical-agnostic</h3>
+          <ul>
+            <li>Conversation → outcome label → self-training loop</li>
+            <li>Live holdout A/B, judged on real conversion</li>
+            <li>Memory / personalization (Hermes memory)</li>
+            <li>Revenue per conversation as north star</li>
+          </ul>
+        </div>
+        <div class="col us">
+          <h3>Don't copy — e-commerce-specific</h3>
+          <ul>
+            <li>Cart recovery, urgency nudges, standardized recs</li>
+            <li>Fully automated close (energy must hand off to a human)</li>
+            <li>Short-cycle, low-consideration tone</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:14px">Takeaway: treat Zobi as an <b>agent-architecture reference</b>, not an industry template. Our Pipedrive outcome labeling + Hermes memory + n8n holdout is the same mechanism layer — which works regardless of what we sell.</p>
+    </section>
+
     <!-- 10 OUR STACK -->
     <section class="slide">
-      <h2><span class="n">09</span> Our Reference Architecture</h2>
+      <h2><span class="n">10</span> Our Reference Architecture</h2>
       <div class="flow" style="flex-direction:column;gap:7px">
         <div class="node"><div class="t">AI Models</div><div class="d">DeepSeek / Kimi &nbsp;<span class="pill">confirm: V3 or K3?</span></div></div>
         <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent (loop, tools, skills, memory, cron, MCP, sub-agents)</div></div>
@@ -265,7 +298,7 @@
 
     <!-- 11 TAKEAWAYS -->
     <section class="slide">
-      <h2><span class="n">10</span> Takeaways &amp; Next Steps</h2>
+      <h2><span class="n">11</span> Takeaways &amp; Next Steps</h2>
       <ul>
         <li>Zobi's moat is the <b>data flywheel</b> (run → label → train → better), not the prompts.</li>
         <li>We can't train a model on day 1 — but we <b>can run the same loop</b> with outcome labels + playbooks.</li>
@@ -286,7 +319,7 @@
   </div>
 
   <div class="foot">
-    <div class="ctr" id="ctr">1 / 11</div>
+    <div class="ctr" id="ctr">1 / 12</div>
     <div class="nav">
       <button id="prev" onclick="go(-1)">← Prev</button>
       <button id="next" onclick="go(1)">Next →</button>

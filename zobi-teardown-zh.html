@@ -237,7 +237,7 @@
 
     <!-- 9 怎么补差距 -->
     <section class="slide">
-      <h2><span class="n">08</span> 我们怎么补差距</h2>
+      <h2><span class="n">09</span> 我们怎么补差距</h2>
       <p class="lead">模型 = 写手。我们的闭环 = 老师。六个具体机制：</p>
       <div class="grid g2">
         <div class="box"><h3>1 · 结果标签</h3><p>用 <b>Pipedrive 的阶段推进</b> 当标签。闭环是我们的，不是模型的。</p></div>
@@ -249,9 +249,42 @@
       </div>
     </section>
 
+    <!-- 08b 参考范围 -->
+    <section class="slide">
+      <h2><span class="n">08</span> 参考范围：机制层，不是行业层</h2>
+      <p class="lead">Zobi 是<b>电商</b> agent。我们的业务是咨询式、高介入的 online selling（比如家庭能源系统）——不属于电商。那它还是参考吗？<b>是。</b></p>
+      <div class="flow" style="margin:16px 0">
+        <div class="node"><div class="t">Sales Agent（大类）</div><div class="d">同一类系统</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">电商子类</div><div class="d">Zobi 在这：标准化商品、快转、全自动成交</div></div>
+        <div class="arrow">+</div>
+        <div class="node"><div class="t">咨询子类</div><div class="d">我们在这：高客单、长周期、需人工交接（Dachplaner / 上门测量）</div></div>
+      </div>
+      <div class="gap">
+        <div class="col zobi">
+          <h3>该借的（垂直无关）</h3>
+          <ul>
+            <li>对话 → 结果标签 → 自训练闭环</li>
+            <li>实时留出组 A/B，按真实转化验证</li>
+            <li>记忆 / 个性化（Hermes memory）</li>
+            <li>每条对话的收入当北极星</li>
+          </ul>
+        </div>
+        <div class="col us">
+          <h3>不该抄的（电商专属）</h3>
+          <ul>
+            <li>购物车挽回、催促、标准化商品推荐</li>
+            <li>全自动闭环成交（能源必须转人工）</li>
+            <li>短周期、低介入的语气</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:14px">一句话：把 Zobi 当<b>agent 架构范本</b>，别当行业范本。我们的 Pipedrive 结果标签 + Hermes 记忆 + n8n 留出组，就是同一套机制层——卖什么都成立。</p>
+    </section>
+
     <!-- 10 我们的架构 -->
     <section class="slide">
-      <h2><span class="n">09</span> 我们的参考架构</h2>
+      <h2><span class="n">10</span> 我们的参考架构</h2>
       <div class="flow" style="flex-direction:column;gap:7px">
         <div class="node"><div class="t">AI 模型</div><div class="d">DeepSeek / Kimi / 混元 &nbsp;<span class="pill">待确认：哪个？</span></div></div>
         <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent（循环、工具、skill、记忆、cron、MCP、子 agent）</div></div>
@@ -265,7 +298,7 @@
 
     <!-- 11 结论 -->
     <section class="slide">
-      <h2><span class="n">10</span> 结论 & 下一步</h2>
+      <h2><span class="n">11</span> 结论 &amp; 下一步</h2>
       <ul>
         <li>Zobi 的护城河是<b>数据飞轮</b>（跑 → 标签 → 训练 → 更强），不是提示词。</li>
         <li>我们第一天没法训模型——但能用<b>同样的闭环</b>（结果标签 + 话术本）跑起来。</li>
@@ -286,7 +319,7 @@
   </div>
 
   <div class="foot">
-    <div class="ctr" id="ctr">1 / 11</div>
+    <div class="ctr" id="ctr">1 / 12</div>
     <div class="nav">
       <button id="prev" onclick="go(-1)">← 上一页</button>
       <button id="next" onclick="go(1)">下一页 →</button>
