@@ -240,11 +240,11 @@
       <h2><span class="n">09</span> 我们怎么补差距</h2>
       <p class="lead">模型 = 写手。我们的闭环 = 老师。六个具体机制：</p>
       <div class="grid g2">
-        <div class="box"><h3>1 · 结果标签</h3><p>用 <b>Pipedrive 的阶段推进</b> 当标签。闭环是我们的，不是模型的。</p></div>
-        <div class="box"><h3>2 · 每条对话的收入</h3><p>北极星指标 = 阶段推进了没 / 赚到了没。不是"听着像不像人"。</p></div>
+        <div class="box"><h3>1 · 结果标签</h3><p>Zobi 的标签 = <b>客户实际做了什么</b>（回复 / 点击 / 购买 / 复购 / 退款）。放到销售管道里同理：<b>回复 → 预约（Calendly）→ 到场 → 要报价 → 接受</b>。Pipedrive 的阶段就是记录这些动作——研究显示<b>行为信号比 CRM 状态更能预测成交</b>。<b>[zobi.com · numigtm.com]</b></p></div>
+        <div class="box"><h3>2 · 每条对话的收入</h3><p>Zobi 的北极星：<b>每条对话的收入</b>，从不按"读着顺不顺"打分。我们也一样：成交时收入落定，成交前标签就是上面的客户动作。<b>[zobi.com]</b></p></div>
         <div class="box"><h3>3 · 上下文靠记忆</h3><p>Hermes 持久记忆存首单/复购、价格敏感、渠道、时段。</p></div>
-        <div class="box"><h3>4 · 实时留出组 A/B</h3><p>n8n / 工作流：只让 20% 流量试新回复，其余做对比。</p></div>
-        <div class="box"><h3>5 · 话术本 / skills</h3><p>赢单回复 → 可复用 skill（GEPA 式）。靠积累，不靠重训。</p></div>
+        <div class="box"><h3>4 · 实时留出组 A/B</h3><p>小部分对话用新回复，其余做对照组，对比真实结果。<b>[zobi]</b></p></div>
+        <div class="box"><h3>5 · 话术本 / skills</h3><p>赢单回复模式 → 可复用 skill，靠积累不靠重训。Hermes 会自动把经验沉淀为 skill；可选 <b>GEPA</b>（<b>Genetic-Pareto Prompt Evolution</b>，ICLR 2026 Oral）离线读执行轨迹进化 skill——走 PR 审核、单次 $2–10、无需 GPU。<b>[Nous Research]</b></p></div>
         <div class="box"><h3>6 · 我们自己的语料</h3><p>从第一天就收集带标签对话 → 等量大了再考虑微调</p></div>
       </div>
     </section>
@@ -252,13 +252,13 @@
     <!-- 08b 参考范围 -->
     <section class="slide">
       <h2><span class="n">08</span> 参考范围：机制层，不是行业层</h2>
-      <p class="lead">Zobi 是<b>电商</b> agent。我们的业务是咨询式、高介入的 online selling——不属于电商。那它还是参考吗？<b>是。</b></p>
+      <p class="lead">Zobi 是<b>电商</b> agent。我们的业务是 <b>online business</b>——不属于电商。那它还是参考吗？<b>是。</b></p>
       <div class="flow" style="margin:16px 0">
         <div class="node"><div class="t">Sales Agent（大类）</div><div class="d">同一类系统</div></div>
         <div class="arrow">→</div>
         <div class="node"><div class="t">电商子类</div><div class="d">Zobi 在这：标准化商品、快转、全自动成交</div></div>
         <div class="arrow">+</div>
-        <div class="node"><div class="t">咨询子类</div><div class="d">我们在这：高客单、长周期——不是一键下单</div></div>
+        <div class="node"><div class="t">非电商子类</div><div class="d">我们在这：online business，不是电商</div></div>
       </div>
       <div class="gap">
         <div class="col zobi">
@@ -307,7 +307,7 @@
       </ul>
       <div class="box" style="margin-top:18px"><h3>我们的技术栈</h3>
         <ul>
-          <li>CRM：<b>Pipedrive</b> — 阶段推进 = 结果标签</li>
+          <li>CRM：<b>Pipedrive</b> — 记录结果：每条对话的客户动作（回复 / 预约 / 到场 / 报价）</li>
           <li>Agent harness：<b>Hermes Agent</b>（循环、工具、skill、记忆、cron、MCP、子 agent）</li>
           <li>渠道：<b>WhatsApp Business API · Calendly · Email</b></li>
           <li>VPS：<b>Hetzner</b>（德国）走 SSH</li>

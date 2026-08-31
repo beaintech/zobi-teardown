@@ -240,11 +240,11 @@
       <h2><span class="n">09</span> How We Bridge the Gap</h2>
       <p class="lead">Model = the writer. Our loop = the teacher. Six concrete mechanisms:</p>
       <div class="grid g2">
-        <div class="box"><h3>1 · Outcome labeling</h3><p>Use <b>Pipedrive stage progression</b> as the label. We own the loop, not the model.</p></div>
-        <div class="box"><h3>2 · Revenue per conversation</h3><p>North-star metric = did the stage advance / did it earn. Not "sounds good".</p></div>
+        <div class="box"><h3>1 · Outcome labeling</h3><p>Zobi's label = what the <b>customer actually did</b> (replied / clicked / bought / reordered / refunded). For a pipeline sale, same principle: <b>replied → booked (Calendly) → attended → quote requested → accepted</b>. Pipedrive stages record these actions — research shows <b>behavior signals beat CRM statuses</b> at predicting deals. <b>[zobi.com · numigtm.com]</b></p></div>
+        <div class="box"><h3>2 · Revenue per conversation</h3><p>Zobi's north star: <b>revenue per conversation</b>, never "reads well". Same for us: revenue lands when a deal closes; before that, the label is the customer action above. <b>[zobi.com]</b></p></div>
         <div class="box"><h3>3 · Context via memory</h3><p>Hermes persistent memory stores first/repeat, price-sensitive, channel, time of day.</p></div>
-        <div class="box"><h3>4 · Live holdout A/B</h3><p>n8n / workflow: only 20% get a reply change, compare the rest.</p></div>
-        <div class="box"><h3>5 · Playbook / skills</h3><p>Winning replies → reusable skills (GEPA-style). Accumulate, don't retrain.</p></div>
+        <div class="box"><h3>4 · Live holdout A/B</h3><p>A small share of threads gets the changed reply; the rest is the control — compare real outcomes. <b>[zobi]</b></p></div>
+        <div class="box"><h3>5 · Playbook / skills</h3><p>Winning reply patterns → reusable skills, accumulated, never retrained. Hermes auto-creates skills from experience; optional <b>GEPA</b> (<b>Genetic-Pareto Prompt Evolution</b>, ICLR 2026 Oral) evolves them offline from execution traces — PR-reviewed, $2–10/run, no GPU. <b>[Nous Research]</b></p></div>
         <div class="box"><h3>6 · Our own corpus</h3><p>Collect labeled threads from day 1 → future fine-tune option when volume justifies.</p></div>
       </div>
     </section>
@@ -252,13 +252,13 @@
     <!-- 08b REFERENCE SCOPE -->
     <section class="slide">
       <h2><span class="n">08</span> Reference Scope: Mechanism, Not Industry</h2>
-      <p class="lead">Zobi is an <b>e-commerce</b> agent. Our business is consultative, high-consideration online selling — not e-commerce. Is it still a valid reference? <b>Yes.</b></p>
+      <p class="lead">Zobi is an <b>e-commerce</b> agent. Our business is <b>online business</b> — not e-commerce. Is it still a valid reference? <b>Yes.</b></p>
       <div class="flow" style="margin:16px 0">
         <div class="node"><div class="t">Sales Agent (category)</div><div class="d">One family of systems</div></div>
         <div class="arrow">→</div>
         <div class="node"><div class="t">E-commerce subclass</div><div class="d">Zobi sits here: standard goods, fast close, fully automated</div></div>
         <div class="arrow">+</div>
-        <div class="node"><div class="t">Consultative subclass</div><div class="d">We sit here: high ticket, long sales cycle — not a one-click buy</div></div>
+        <div class="node"><div class="t">Non-e-commerce subclass</div><div class="d">We sit here: online business, not e-commerce</div></div>
       </div>
       <div class="gap">
         <div class="col zobi">
@@ -307,7 +307,7 @@
       </ul>
       <div class="box" style="margin-top:18px"><h3>Our stack</h3>
         <ul>
-          <li>CRM: <b>Pipedrive</b> — stage progression = the outcome label</li>
+          <li>CRM: <b>Pipedrive</b> — records the outcome: the customer's action per conversation (reply / booking / show-up / quote)</li>
           <li>Agent harness: <b>Hermes Agent</b> (loop, tools, skills, memory, cron, MCP, sub-agents)</li>
           <li>Channels: <b>WhatsApp Business API · Calendly · Email</b></li>
           <li>VPS: <b>Hetzner</b> (Germany) over SSH</li>
