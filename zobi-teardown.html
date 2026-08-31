@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zobi Teardown & Our Gap Analysis</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --ink:#16181d; --muted:#5b6472;
+    --accent:#2f6df0; --accent2:#0f9d76; --warn:#e0533d; --line:#e3e7ee;
+    --chip:#eef3ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);overflow:hidden}
+  .deck{height:100vh;display:flex;flex-direction:column}
+  .stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:32px}
+  .slide{display:none;width:min(1040px,94vw);max-height:84vh;overflow:auto;background:var(--card);
+    border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 40px rgba(20,30,60,.08);
+    padding:46px 54px;animation:fade .35s ease}
+  .slide.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h1{font-size:34px;line-height:1.18;letter-spacing:-.5px}
+  h2{font-size:25px;margin-bottom:18px;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+  h2 .n{font-size:13px;color:#fff;background:var(--accent);border-radius:8px;padding:3px 9px;font-weight:700}
+  p{font-size:16.5px;line-height:1.7;color:var(--muted);margin:10px 0}
+  .lead{font-size:18px;color:var(--ink)}
+  ul{margin:12px 0 12px 4px;list-style:none}
+  li{font-size:16.5px;line-height:1.65;padding:8px 0 8px 26px;position:relative;color:var(--ink)}
+  li:before{content:"";position:absolute;left:4px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  li b{color:var(--ink)}
+  .grid{display:grid;gap:16px;margin-top:18px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .box{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:#fcfdff}
+  .box h3{font-size:15px;margin-bottom:8px;color:var(--accent)}
+  .box p{font-size:14.5px;margin:4px 0;color:var(--muted)}
+  .stat{text-align:center;padding:20px 12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fbfdff,#f4f8ff)}
+  .stat .big{font-size:30px;font-weight:800;color:var(--accent);letter-spacing:-.5px}
+  .stat .lbl{font-size:13px;color:var(--muted);margin-top:6px}
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin:18px 0}
+  .node{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fff;min-width:150px;flex:1}
+  .node .t{font-size:13px;font-weight:700;color:var(--accent)}
+  .node .d{font-size:13px;color:var(--muted);margin-top:6px}
+  .arrow{display:flex;align-items:center;color:var(--muted);font-size:22px;font-weight:700}
+  .tag{display:inline-block;font-size:12.5px;background:var(--chip);color:var(--accent);border-radius:7px;padding:4px 10px;margin:3px 4px 3px 0;font-weight:600}
+  .quote{border-left:4px solid var(--accent2);padding:10px 16px;color:var(--ink);font-style:italic;background:#f3fbf7;border-radius:0 10px 10px 0;font-size:15.5px}
+  .warn{color:var(--warn)}
+  .foot{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;
+    padding:12px 26px;background:rgba(247,248,250,.92);border-top:1px solid var(--line);backdrop-filter:blur(6px)}
+  .foot .ctr{font-size:13px;color:var(--muted)}
+  .nav{display:flex;gap:8px}
+  .nav button{font:inherit;font-size:14px;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--line);
+    border-radius:9px;padding:8px 16px;cursor:pointer}
+  .nav button:hover{border-color:var(--accent);color:var(--accent)}
+  .nav button:disabled{opacity:.4;cursor:not-allowed}
+  code{background:#eef1f6;padding:2px 7px;border-radius:6px;font-size:13.5px;color:#222}
+  .pill{font-size:12px;color:#fff;background:var(--accent2);border-radius:20px;padding:3px 12px;font-weight:700}
+  .gap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .gap .col{border-radius:14px;padding:18px 20px}
+  .gap .zobi{background:#f3fbf7;border:1px solid #cfeede}
+  .gap .us{background:#fff5f3;border:1px solid #f3d6cf}
+  .gap h3{font-size:15px;margin-bottom:10px}
+  .gap .zobi h3{color:var(--accent2)} .gap .us h3{color:var(--warn)}
+  .gap li:before{background:transparent;border:1.5px solid currentColor}
+  .gap .zobi li:before{color:var(--accent2)} .gap .us li:before{color:var(--warn)}
+</style>
+</head>
+<body>
+<div class="deck">
+  <div class="stage">
+
+    <!-- 1 TITLE -->
+    <section class="slide active">
+      <h1>Zobi: Competitive Teardown<br>&amp; How We Close the Gap</h1>
+      <p class="lead" style="margin-top:18px">How an applied AI lab built a sales agent that learns from outcomes —<br>and what it means for our stack (Hermes + DeepSeek / Kimi).</p>
+      <div style="margin-top:26px">
+        <span class="tag">Applied AI lab</span>
+        <span class="tag">Sales agent</span>
+        <span class="tag">Outcome-labeled training</span>
+        <span class="tag">Gap analysis</span>
+      </div>
+      <p style="margin-top:30px;font-size:14px">Reference: zobi.com · blog.zobi.com &nbsp;|&nbsp; Source: Zobi published figures (official site)</p>
+    </section>
+
+    <!-- 2 WHAT IS ZOBI -->
+    <section class="slide">
+      <h2><span class="n">01</span> What is Zobi</h2>
+      <p class="lead">An <b>applied AI lab</b> building "models with EQ" — models trained to <b>understand and influence people</b>.</p>
+      <div class="grid g3">
+        <div class="box"><h3>Base</h3><p>Tallinn, Estonia. Small, flat team — 8 open roles, <b>no management layers</b>, everyone reports to the founder.</p></div>
+        <div class="box"><h3>Not a SaaS vendor</h3><p>They <b>train their own models</b> and <b>run sales conversations end-to-end</b> for commerce brands. The product is the model + the loop.</p></div>
+        <div class="box"><h3>The bet</h3><p>"Language models learned to write by reading. The next capability is learned by <b>trying and finding out</b> — from consequences, not instructions."</p></div>
+      </div>
+      <div class="quote" style="margin-top:20px">"No model has learned to sell. Frontier models can describe a product perfectly, but they've never sat with ten thousand hesitant buyers."</div>
+    </section>
+
+    <!-- 3 NUMBERS -->
+    <section class="slide">
+      <h2><span class="n">02</span> Real Usage Data (published)</h2>
+      <p>All figures below are Zobi's own published numbers — not estimates.</p>
+      <div class="grid g4">
+        <div class="stat"><div class="big">$16M</div><div class="lbl">ARR, 3 months<br>after launch</div></div>
+        <div class="stat"><div class="big">50k+</div><div class="lbl">live conversations<br>per day</div></div>
+        <div class="stat"><div class="big">1M+</div><div class="lbl">outcome-labeled<br>conversations</div></div>
+        <div class="stat"><div class="big">80+</div><div class="lbl">brands in<br>production</div></div>
+      </div>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="box"><h3>Reply rate</h3><p><b>45%</b> reply rate in production — the share of threads where the customer actually responds.</p></div>
+        <div class="box"><h3>Training corpus</h3><p>Each of the 1M+ threads carries <b>what the human did next</b> — the signal the public internet does not contain.</p></div>
+      </div>
+      <p style="margin-top:16px;font-size:14px" class="muted">Takeaway: they reached $16M ARR with a tiny team because the <b>data flywheel</b>, not headcount, scales the product.</p>
+    </section>
+
+    <!-- 4 AI LAB LOOP -->
+    <section class="slide">
+      <h2><span class="n">03</span> How the AI Lab Trains Its Model</h2>
+      <p class="lead">The lab's core engine: turn every live conversation into a training signal.</p>
+      <div class="flow">
+        <div class="node"><div class="t">1 · Run</div><div class="d">Agents run real sales chats end-to-end for brands</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">2 · Label</div><div class="d">Each thread tagged with the outcome (what the customer did)</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">3 · Train</div><div class="d">Train on outcomes, not text. Predict conversion per reply</div></div>
+        <div class="arrow">→</div>
+        <div class="node"><div class="t">4 · Score</div><div class="d">Judge on revenue per conversation</div></div>
+        <div class="arrow">↺</div>
+        <div class="node"><div class="t">5 · Validate</div><div class="d">Live holdout A/B → deploy better policy → repeat</div></div>
+      </div>
+      <div class="quote">"Trained on outcomes. Evaluated on revenue." — the model learns from the one signal the public internet lacks: what a real buyer did next.</div>
+      <p style="margin-top:14px">Scoring detail: each draft reply gets a <b>predicted chance of converting</b>; the gap between prediction and reality flows back into training. A reply that reads best is often <b>not</b> the one that sold — so they never score on "looks good".</p>
+    </section>
+
+    <!-- 5 OUTCOME LABEL -->
+    <section class="slide">
+      <h2><span class="n">04</span> The Outcome Label (no human annotator)</h2>
+      <p>Nobody rates replies. The label is simply <b>what the customer did</b> — a much harder thing to fool.</p>
+      <div class="grid g2">
+        <div class="box"><h3>Captured per thread</h3>
+          <ul>
+            <li>replied — and how quickly</li>
+            <li>clicked the link</li>
+            <li>bought — for how much, discount used?</li>
+            <li>reordered later, or not</li>
+            <li>refunded</li>
+          </ul>
+        </div>
+        <div class="box"><h3>Real example (published)</h3>
+          <p style="font-family:ui-monospace,Menlo,monospace;font-size:13.5px;color:var(--ink);background:#f4f6fb;padding:12px;border-radius:10px">
+            "is it worth it over the cheaper one?"<br>
+            "honestly, for daily use, yes. it's the one people reorder. want me to hold one?"<br><br>
+            <b>REPLIED · 4 MIN</b><br>
+            <b>PURCHASED · $86</b><br>
+            <b>NO DISCOUNT USED</b><br>
+            <b>REORDERED · DAY 52</b>
+          </p>
+        </div>
+      </div>
+      <p style="margin-top:12px">This is the dataset the open web can't produce: a million sales conversations <b>with the outcome attached</b>.</p>
+    </section>
+
+    <!-- 6 SALES AGENT WORKFLOW -->
+    <section class="slide">
+      <h2><span class="n">05</span> Zobi Sales Agent — Function Logic</h2>
+      <p class="lead">The agent handles four commerce scenarios, then runs the same loop on each:</p>
+      <div style="margin:6px 0 16px">
+        <span class="tag">abandoned checkout</span>
+        <span class="tag">shipping question</span>
+        <span class="tag">reorder reminder</span>
+        <span class="tag">add-on suggestion</span>
+      </div>
+      <div class="flow" style="flex-direction:column;gap:8px">
+        <div class="node"><div class="t">Trigger</div><div class="d">A real event fires the agent — cart abandoned, shipment question, time to reorder, upsell window</div></div>
+        <div class="node"><div class="t">Read context</div><div class="d">First vs repeat order · price-sensitive history · last purchase · preferred channel · time of day</div></div>
+        <div class="node"><div class="t">Generate + predict</div><div class="d">Write the reply AND predict its conversion probability</div></div>
+        <div class="node"><div class="t">Send on channel</div><div class="d">WhatsApp / Email / Web — wherever the customer answers</div></div>
+        <div class="node"><div class="t">Capture outcome → label</div><div class="d">What the customer did becomes the training signal</div></div>
+        <div class="node"><div class="t">Compare + validate</div><div class="d">Prediction vs actual → training; live holdout confirms real gain</div></div>
+      </div>
+    </section>
+
+    <!-- 7 WHAT IT LEARNS -->
+    <section class="slide">
+      <h2><span class="n">06</span> What the Agent Actually Learns</h2>
+      <div class="quote" style="margin-bottom:16px">"Most of selling isn't in the words." — read the person from thin signals, get the timing right, know when to stop talking.</div>
+      <div class="grid g2">
+        <div class="box"><h3>Thin signals</h3>
+          <ul>
+            <li><b>"you're the best 🙏"</b> → thread is warm</li>
+            <li><b>"ok"</b> → thread is cooling</li>
+            <li>When to mention price</li>
+            <li>When to follow up</li>
+            <li>When to go quiet</li>
+          </ul>
+        </div>
+        <div class="box"><h3>Context changes the reply</h3>
+          <ul>
+            <li>Loyal repeat + discount = <b>lost margin</b></li>
+            <li>Hesitating first order, Sunday night + discount = <b>sometimes the sale</b></li>
+            <li>Discount can win the order <b>or</b> cheapen the brand</li>
+            <li>Model learns by seeing it happen a lot — not by rules</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:14px">Ethics built in: consent, tone and honesty are <b>measured</b>, not just guardrails — "a sale that loses you the customer isn't one."</p>
+    </section>
+
+    <!-- 8 THE GAP -->
+    <section class="slide">
+      <h2><span class="n">07</span> The Gap: Their Model vs Our API</h2>
+      <div class="gap">
+        <div class="col zobi">
+          <h3>Zobi — owns the model</h3>
+          <ul>
+            <li>Trained on <b>1M+ outcome-labeled</b> sales conversations</li>
+            <li>Learns <b>consequences</b>, not just text</li>
+            <li>Predicts conversion per reply</li>
+            <li>Improves from every live chat</li>
+            <li>Moat = data flywheel + own weights</li>
+          </ul>
+        </div>
+        <div class="col us">
+          <h3>Us — DeepSeek V3 / Kimi K3 API</h3>
+          <ul>
+            <li>Trained on <b>public internet</b>, never saw a sales outcome</li>
+            <li>Writes fluent sales copy, but <b>no idea if it worked</b></li>
+            <li>No conversion prediction, no outcome learning</li>
+            <li>Static between our calls</li>
+            <li>Moat must come from <b>our loop</b>, not weights</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:16px" class="warn"><b>The core gap:</b> the API model lacks the outcome feedback loop. We can't retrain it — but we <b>can build the loop around it</b>.</p>
+    </section>
+
+    <!-- 9 BRIDGE THE GAP -->
+    <section class="slide">
+      <h2><span class="n">08</span> How We Bridge the Gap</h2>
+      <p class="lead">Model = the writer. Our loop = the teacher. Six concrete mechanisms:</p>
+      <div class="grid g2">
+        <div class="box"><h3>1 · Outcome labeling</h3><p>Use <b>Pipedrive stage progression</b> as the label. We own the loop, not the model.</p></div>
+        <div class="box"><h3>2 · Revenue per conversation</h3><p>North-star metric = did the stage advance / did it earn. Not "sounds good".</p></div>
+        <div class="box"><h3>3 · Context via memory</h3><p>Hermes persistent memory stores first/repeat, price-sensitive, channel, time of day.</p></div>
+        <div class="box"><h3>4 · Live holdout A/B</h3><p>n8n / workflow: only 20% get a reply change, compare the rest.</p></div>
+        <div class="box"><h3>5 · Playbook / skills</h3><p>Winning replies → reusable skills (GEPA-style). Accumulate, don't retrain.</p></div>
+        <div class="box"><h3>6 · Our own corpus</h3><p>Collect labeled threads from day 1 → future fine-tune option when volume justifies.</p></div>
+      </div>
+    </section>
+
+    <!-- 10 OUR STACK -->
+    <section class="slide">
+      <h2><span class="n">09</span> Our Reference Architecture</h2>
+      <div class="flow" style="flex-direction:column;gap:7px">
+        <div class="node"><div class="t">AI Models</div><div class="d">DeepSeek / Kimi &nbsp;<span class="pill">confirm: V3 or K3?</span></div></div>
+        <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent (loop, tools, skills, memory, cron, MCP, sub-agents)</div></div>
+        <div class="node"><div class="t">VPS / Cloud</div><div class="d">Hetzner, Germany &nbsp;|&nbsp; Docker / SSH / runtime / DB / logs</div></div>
+        <div class="node"><div class="t">Tools · Memory · Workflow</div><div class="d">REST/MCP · Webhooks · APIs · Browser · Terminal &nbsp;|&nbsp; memory files · sessions &nbsp;|&nbsp; n8n · cron · scheduler</div></div>
+        <div class="node"><div class="t">Energy / Solar Agents</div><div class="d">Marketing (Meta, SEO) · SEO · CRM (Pipedrive) · Energy Platform · Execution · Finance · Analytics</div></div>
+        <div class="node"><div class="t">Sales Agent</div><div class="d">ref: zobi.com — outcome-labeled threads · conversion prediction · context-aware · scored on revenue · live holdout · multi-channel follow-up</div></div>
+        <div class="node"><div class="t">Business State → Event Loop</div><div class="d">write back to CRM → data refeeds the agent (the flywheel)</div></div>
+      </div>
+    </section>
+
+    <!-- 11 TAKEAWAYS -->
+    <section class="slide">
+      <h2><span class="n">10</span> Takeaways &amp; Next Steps</h2>
+      <ul>
+        <li>Zobi's moat is the <b>data flywheel</b> (run → label → train → better), not the prompts.</li>
+        <li>We can't train a model on day 1 — but we <b>can run the same loop</b> with outcome labels + playbooks.</li>
+        <li>Ship MVP on <b>Hermes + DeepSeek / Kimi</b>; instrument outcome capture from the first conversation.</li>
+        <li>The gap is real but <b>bridgeable</b>: model writes, our loop teaches.</li>
+      </ul>
+      <div class="box" style="margin-top:18px"><h3>Confirm to proceed</h3>
+        <ul>
+          <li>Primary LLM: <b>DeepSeek V3</b> or <b>Kimi K3</b>?</li>
+          <li>VPS: <b>Hetzner</b> (Germany) over SSH — Docker or plain install?</li>
+          <li>Then I send the CLI to deploy.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <div class="ctr" id="ctr">1 / 11</div>
+    <div class="nav">
+      <button id="prev" onclick="go(-1)">← Prev</button>
+      <button id="next" onclick="go(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var s=document.querySelectorAll('.slide'),i=0;
+  function show(){s.forEach(function(x){x.classList.remove('active')});s[i].classList.add('active');
+    document.getElementById('ctr').textContent=(i+1)+' / '+s.length;
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===s.length-1;}
+  function go(d){i=Math.max(0,Math.min(s.length-1,i+d));show();}
+  document.addEventListener('keydown',function(e){if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);});
+  show();
+</script>
+</body>
+</html>
