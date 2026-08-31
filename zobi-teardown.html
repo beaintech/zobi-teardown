@@ -235,31 +235,25 @@
       <p style="margin-top:16px" class="warn"><b>The core gap:</b> the API model lacks the outcome feedback loop. We can't retrain it — but we <b>can build the loop around it</b>.</p>
     </section>
 
-    <!-- 9 BRIDGE THE GAP -->
+    <!-- 8 BRIDGE THE GAP -->
     <section class="slide">
-      <h2><span class="n">09</span> How We Bridge the Gap</h2>
+      <h2><span class="n">08</span> How We Bridge the Gap</h2>
       <p class="lead">Model = the writer. Our loop = the teacher. Six concrete mechanisms:</p>
       <div class="grid g2">
-        <div class="box"><h3>1 · Outcome labeling</h3><p>Zobi's label = what the <b>customer actually did</b> (replied / clicked / bought / reordered / refunded). For a pipeline sale, same principle: <b>replied → booked (Calendly) → attended → quote requested → accepted</b>. Pipedrive supports this: stages are <b>custom, defined as observable customer milestones</b> (official docs), the API moves deals between stages, and <b>webhooks fire on stage change</b> — the label can be written back automatically. <b>[zobi.com · support.pipedrive.com · developers.pipedrive.com]</b></p></div>
+        <div class="box"><h3>1 · Outcome labeling</h3><p>Zobi's label = what the <b>customer actually did</b> (replied / clicked / bought / reordered / refunded). Same principle for us: the label is the customer's <b>observable action</b>, defined per instance. Our energy instance: <b>replied → booked (Calendly) → attended → quote requested → accepted</b>. There, Pipedrive stages record these milestones — its docs recommend exactly this, and the API + webhooks write the label back automatically. <b>[zobi.com · support.pipedrive.com · developers.pipedrive.com]</b></p></div>
         <div class="box"><h3>2 · Revenue per conversation</h3><p>Zobi's north star: <b>revenue per conversation</b>, never "reads well". Same for us: revenue lands when a deal closes; before that, the label is the customer action above. <b>[zobi.com]</b></p></div>
         <div class="box"><h3>3 · Context via memory</h3><p>Hermes persistent memory stores first/repeat, price-sensitive, channel, time of day.</p></div>
         <div class="box"><h3>4 · Live holdout A/B</h3><p>A small share of threads gets the changed reply; the rest is the control — compare real outcomes. <b>[zobi]</b></p></div>
-        <div class="box"><h3>5 · Playbook / skills</h3><p>Winning reply patterns → reusable skills, accumulated, never retrained. Hermes auto-creates skills from experience; optional <b>GEPA</b> (<b>Genetic-Pareto Prompt Evolution</b>, ICLR 2026 Oral) evolves them offline from execution traces — PR-reviewed, $2–10/run, no GPU. <b>[Nous Research]</b></p></div>
+        <div class="box"><h3>5 · Playbook / skills</h3><p>Winning reply patterns → reusable skills, accumulated, never retrained. Skills are a core Hermes harness capability; the playbook grows with experience, no retraining.</p></div>
         <div class="box"><h3>6 · Our own corpus</h3><p>Collect labeled threads from day 1 → future fine-tune option when volume justifies.</p></div>
       </div>
     </section>
 
-    <!-- 08b REFERENCE SCOPE -->
+    <!-- 9 REFERENCE SCOPE -->
     <section class="slide">
-      <h2><span class="n">08</span> Reference Scope: Mechanism, Not Industry</h2>
-      <p class="lead">Zobi is an <b>e-commerce</b> agent. Our business is <b>online business</b> — not e-commerce. Is it still a valid reference? <b>Yes.</b></p>
-      <div class="flow" style="margin:16px 0">
-        <div class="node"><div class="t">Sales Agent (category)</div><div class="d">E-commerce and online business</div></div>
-        <div class="arrow">→</div>
-        <div class="node"><div class="t">E-commerce subclass</div><div class="d">Zobi sits here: standard goods, fast close, fully automated</div></div>
-        <div class="arrow">+</div>
-        <div class="node"><div class="t">Non-e-commerce subclass</div><div class="d">We sit here: online business, not e-commerce</div></div>
-      </div>
+      <h2><span class="n">09</span> Reference Scope: Mechanism, Not Industry</h2>
+      <p class="lead">Zobi is an <b>e-commerce</b> agent. Our business is <b>online business</b> — not e-commerce (current real case: <b>home energy systems</b> — Photovoltaik / Speicher / Wärmepumpe / Wallbox). Is it still a valid reference? <b>Yes.</b></p>
+      <p style="margin:16px 0">Same category, different subclass: <b>Zobi</b> = e-commerce (standard goods, fast close); <b>we</b> = online business, not e-commerce.</p>
       <div class="gap">
         <div class="col zobi">
           <h3>Borrow — vertical-agnostic</h3>
@@ -274,12 +268,12 @@
           <h3>Don't copy — e-commerce-specific</h3>
           <ul>
             <li>Cart recovery, urgency nudges, standardized recs</li>
-            <li>An e-commerce agent can close a deal end-to-end on its own. Our business is not e-commerce: proposal, pricing and closing need a real human, so it can't be fully automated.</li>
+            <li>An e-commerce agent can close a deal end-to-end on its own. Our business is not e-commerce: most steps are automatable today (auto-reply, auto-scheduling, auto-quote &amp; proposal, e-signature, auto-order) — humans keep final approval + negotiation judgment.</li>
             <li>Short-cycle, low-consideration tone</li>
           </ul>
         </div>
       </div>
-      <p style="margin-top:14px">Takeaway: treat Zobi as an <b>agent-architecture reference</b>, not an industry template. Our Pipedrive outcome labeling + Hermes memory + n8n holdout is the same mechanism layer — which works regardless of what we sell.</p>
+      <p style="margin-top:14px">Takeaway: treat Zobi as an <b>agent-architecture reference</b>, not an industry template. Outcome labeling + Hermes memory + n8n holdout A/B is the same mechanism layer — which works regardless of what we sell.</p>
     </section>
 
     <!-- 10 OUR STACK -->
@@ -287,13 +281,13 @@
       <h2><span class="n">10</span> Our Reference Architecture</h2>
       <div class="flow" style="flex-direction:column;gap:7px">
         <div class="node"><div class="t">AI Models</div><div class="d">DeepSeek / Kimi &nbsp;<span class="pill">confirm: V3 or K3?</span></div></div>
-        <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent (loop, tools, skills, memory, cron, MCP, sub-agents)</div></div>
+        <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent — Agent Loop · Tool Calling · Skills · Sessions · Persistent Memory · Sub-Agent Delegation · Cron · Scheduling · MCP</div></div>
         <div class="node"><div class="t">VPS / Cloud</div><div class="d">Hetzner, Germany &nbsp;|&nbsp; Docker / SSH / runtime / DB / logs</div></div>
         <div class="node"><div class="t">Tools · Memory · Workflow</div><div class="d">REST/MCP · Webhooks · APIs · Browser · Terminal &nbsp;|&nbsp; memory files · sessions &nbsp;|&nbsp; n8n · cron · scheduler</div></div>
-        <div class="node"><div class="t">Energy / Solar Agents</div><div class="d">Marketing (Meta, SEO) · SEO · CRM (Pipedrive) · Energy Platform · Execution · Finance · Analytics</div></div>
-        <div class="node"><div class="t">Sales Agent</div><div class="d">ref: zobi.com — outcome-labeled threads · conversion prediction · context-aware · scored on revenue · live holdout · multi-channel follow-up</div></div>
-        <div class="node"><div class="t">Business State → Event Loop</div><div class="d">write back to CRM → data refeeds the agent (the flywheel)</div></div>
+        <div class="node"><div class="t">AGENTS (general engine)</div><div class="d">the sales-agent product: outcome-labeled threads · conversion prediction · context-aware · scored on revenue · live holdout · multi-channel follow-up (ref: zobi.com)</div></div>
+        <div class="node"><div class="t">Business State → Event Loop</div><div class="d">write back to business state → data refeeds the agent (the flywheel)</div></div>
       </div>
+      <p style="margin-top:14px"><b>First instance</b> (energy): Energy / Solar Agents — Marketing (Meta, SEO) · SEO · CRM (Pipedrive) · Energy Platform · Execution · Finance · Analytics</p>
     </section>
 
     <!-- 11 TAKEAWAYS -->
@@ -307,7 +301,7 @@
       </ul>
       <div class="box" style="margin-top:18px"><h3>Our stack</h3>
         <ul>
-          <li>CRM: <b>Pipedrive</b> — records the outcome: the customer's action per conversation (reply / booking / show-up / quote)</li>
+          <li>CRM (energy instance): <b>Pipedrive</b> — records the outcome: reply / booking / show-up / quote</li>
           <li>Agent harness: <b>Hermes Agent</b> (loop, tools, skills, memory, cron, MCP, sub-agents)</li>
           <li>Channels: <b>WhatsApp Business API · Calendly · Email</b></li>
           <li>VPS: <b>Hetzner</b> (Germany) over SSH</li>

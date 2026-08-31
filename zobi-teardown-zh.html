@@ -235,31 +235,25 @@
       <p style="margin-top:16px" class="warn"><b>核心差距：</b>API 模型缺了"结果反馈闭环"。我们没法重训它——但我们<b>可以在它外面把闭环建起来</b>。注意：混元（Hunyuan）是腾讯自研模型，但作为 API 调用时，和 DeepSeek / Kimi 一样没有 outcome 数据，差距同样存在。</p>
     </section>
 
-    <!-- 9 怎么补差距 -->
+    <!-- 8 怎么补差距 -->
     <section class="slide">
-      <h2><span class="n">09</span> 我们怎么补差距</h2>
+      <h2><span class="n">08</span> 我们怎么补差距</h2>
       <p class="lead">模型 = 写手。我们的闭环 = 老师。六个具体机制：</p>
       <div class="grid g2">
-        <div class="box"><h3>1 · 结果标签</h3><p>Zobi 的标签 = <b>客户实际做了什么</b>（回复 / 点击 / 购买 / 复购 / 退款）。放到销售管道里同理：<b>回复 → 预约（Calendly）→ 到场 → 要报价 → 接受</b>。Pipedrive 正好支持：阶段<b>可自定义、官方就建议以「可观察的客户里程碑」来定义</b>，API 可移动阶段、<b>webhook 在阶段变化时触发</b>——标签能自动写回。<b>[zobi.com · support.pipedrive.com · developers.pipedrive.com]</b></p></div>
+        <div class="box"><h3>1 · 结果标签</h3><p>Zobi 的标签 = <b>客户实际做了什么</b>（回复 / 点击 / 购买 / 复购 / 退款）。我们同理：标签 = 客户<b>可观察的动作</b>，按实例定义。我们的 energy 实例：<b>回复 → 预约（Calendly）→ 到场 → 要报价 → 接受</b>。在那里，Pipedrive 阶段记录这些里程碑——官方文档建议的正是这么定义，API + webhook 能自动写回标签。<b>[zobi.com · support.pipedrive.com · developers.pipedrive.com]</b></p></div>
         <div class="box"><h3>2 · 每条对话的收入</h3><p>Zobi 的北极星：<b>每条对话的收入</b>，从不按"读着顺不顺"打分。我们也一样：成交时收入落定，成交前标签就是上面的客户动作。<b>[zobi.com]</b></p></div>
         <div class="box"><h3>3 · 上下文靠记忆</h3><p>Hermes 持久记忆存首单/复购、价格敏感、渠道、时段。</p></div>
         <div class="box"><h3>4 · 实时留出组 A/B</h3><p>小部分对话用新回复，其余做对照组，对比真实结果。<b>[zobi]</b></p></div>
-        <div class="box"><h3>5 · 话术本 / skills</h3><p>赢单回复模式 → 可复用 skill，靠积累不靠重训。Hermes 会自动把经验沉淀为 skill；可选 <b>GEPA</b>（<b>Genetic-Pareto Prompt Evolution</b>，ICLR 2026 Oral）离线读执行轨迹进化 skill——走 PR 审核、单次 $2–10、无需 GPU。<b>[Nous Research]</b></p></div>
+        <div class="box"><h3>5 · 话术本 / skills</h3><p>赢单回复模式 → 可复用 skill，靠积累不靠重训。skill 是 Hermes harness 的核心能力；话术本随经验增长，不需要重训。</p></div>
         <div class="box"><h3>6 · 我们自己的语料</h3><p>从第一天就收集带标签对话 → 等量大了再考虑微调</p></div>
       </div>
     </section>
 
-    <!-- 08b 参考范围 -->
+    <!-- 9 参考范围 -->
     <section class="slide">
-      <h2><span class="n">08</span> 参考范围：机制层，不是行业层</h2>
-      <p class="lead">Zobi 是<b>电商</b> agent。我们的业务是 <b>online business</b>——不属于电商。那它还是参考吗？<b>是。</b></p>
-      <div class="flow" style="margin:16px 0">
-        <div class="node"><div class="t">Sales Agent（大类）</div><div class="d">电商和 online business</div></div>
-        <div class="arrow">→</div>
-        <div class="node"><div class="t">电商子类</div><div class="d">Zobi 在这：标准化商品、快转、全自动成交</div></div>
-        <div class="arrow">+</div>
-        <div class="node"><div class="t">非电商子类</div><div class="d">我们在这：online business，不是电商</div></div>
-      </div>
+      <h2><span class="n">09</span> 参考范围：机制层，不是行业层</h2>
+      <p class="lead">Zobi 是<b>电商</b> agent。我们的业务是 <b>online business</b>——不属于电商（当前真实案例：<b>家庭新能源系统</b>——Photovoltaik / Speicher / Wärmepumpe / Wallbox）。那它还是参考吗？<b>是。</b></p>
+      <p style="margin:16px 0">同一大类、不同子类：<b>Zobi</b> = 电商（标准化商品、快转）；<b>我们</b> = online business，不是电商。</p>
       <div class="gap">
         <div class="col zobi">
           <h3>该借的（垂直无关）</h3>
@@ -274,12 +268,12 @@
           <h3>不该抄的（电商专属）</h3>
           <ul>
             <li>购物车挽回、催促、标准化商品推荐</li>
-            <li>电商的 agent 能把单子全程自动化谈成；我们的业务不是电商，所以方案、报价、成交这些环节必须有真人参与，不能全自动。</li>
+            <li>电商的 agent 能把单子全程自动化谈成；我们的业务不是电商：大部分环节今天就能自动（自动回复、自动约时间、自动出方案报价、电子签名、自动下单）——人只保留在「最终审批 + 谈判判断」。</li>
             <li>短周期、低介入的语气</li>
           </ul>
         </div>
       </div>
-      <p style="margin-top:14px">一句话：把 Zobi 当<b>agent 架构范本</b>，别当行业范本。我们的 Pipedrive 结果标签 + Hermes 记忆 + n8n 留出组，就是同一套机制层——卖什么都成立。</p>
+      <p style="margin-top:14px">一句话：把 Zobi 当<b>agent 架构范本</b>，别当行业范本。结果标签 + Hermes 记忆 + n8n 留出组 A/B，就是同一套机制层——卖什么都成立。</p>
     </section>
 
     <!-- 10 我们的架构 -->
@@ -287,13 +281,13 @@
       <h2><span class="n">10</span> 我们的参考架构</h2>
       <div class="flow" style="flex-direction:column;gap:7px">
         <div class="node"><div class="t">AI 模型</div><div class="d">DeepSeek / Kimi / 混元 &nbsp;<span class="pill">待确认：哪个？</span></div></div>
-        <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent（循环、工具、skill、记忆、cron、MCP、子 agent）</div></div>
+        <div class="node"><div class="t">Agent Harness</div><div class="d">Hermes Agent — Agent Loop · Tool Calling · Skills · Sessions · Persistent Memory · Sub-Agent Delegation · Cron · Scheduling · MCP</div></div>
         <div class="node"><div class="t">VPS / 云</div><div class="d">Hetzner，德国 &nbsp;|&nbsp; Docker / SSH / 运行时 / DB / 日志</div></div>
         <div class="node"><div class="t">工具 · 记忆 · 工作流</div><div class="d">REST/MCP · Webhooks · API · 浏览器 · 终端 &nbsp;|&nbsp; 记忆文件 · 会话 &nbsp;|&nbsp; n8n · cron · 调度</div></div>
-        <div class="node"><div class="t">Energy / Solar Agents</div><div class="d">Marketing（Meta, SEO）· SEO · CRM（Pipedrive）· Energy Platform · Execution · Finance · Analytics</div></div>
-        <div class="node"><div class="t">Sales Agent</div><div class="d">参考：zobi.com — 带结果标签的对话 · 转化预测 · 上下文感知 · 按收入评估 · 实时留出组 · 多渠道跟进</div></div>
-        <div class="node"><div class="t">业务状态 → 事件循环</div><div class="d">写回 CRM → 数据回流给 agent（飞轮）</div></div>
+        <div class="node"><div class="t">AGENTS（通用引擎）</div><div class="d">sales agent 产品：带结果标签的对话 · 转化预测 · 上下文感知 · 按收入评估 · 实时留出组 · 多渠道跟进（参考：zobi.com）</div></div>
+        <div class="node"><div class="t">业务状态 → 事件循环</div><div class="d">写回业务状态 → 数据回流给 agent（飞轮）</div></div>
       </div>
+      <p style="margin-top:14px"><b>第一个实例</b>（energy）：Energy / Solar Agents — Marketing（Meta, SEO）· SEO · CRM（Pipedrive）· Energy Platform · Execution · Finance · Analytics</p>
     </section>
 
     <!-- 11 结论 -->
@@ -307,7 +301,7 @@
       </ul>
       <div class="box" style="margin-top:18px"><h3>我们的技术栈</h3>
         <ul>
-          <li>CRM：<b>Pipedrive</b> — 记录结果：每条对话的客户动作（回复 / 预约 / 到场 / 报价）</li>
+          <li>CRM（energy 实例）：<b>Pipedrive</b> — 记录结果：回复 / 预约 / 到场 / 报价</li>
           <li>Agent harness：<b>Hermes Agent</b>（循环、工具、skill、记忆、cron、MCP、子 agent）</li>
           <li>渠道：<b>WhatsApp Business API · Calendly · Email</b></li>
           <li>VPS：<b>Hetzner</b>（德国）走 SSH</li>
